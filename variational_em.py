@@ -82,6 +82,8 @@ class VariationalEM():
 
         Args:
             n_iter (int): number of iterations.
+
+        TO DO: AJOUTER LE CRITERE D'ARRETE
         """
         
         for i in range(n_iter):
