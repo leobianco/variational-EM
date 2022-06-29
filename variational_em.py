@@ -108,25 +108,33 @@ class VariationalEM():
         diff_ELBO = 1
         i = 0
 
-        while i < max_iter and diff_ELBO > self.tol_em:
+        while i < max_iter and np.abs(diff_ELBO) > self.tol_em:
+
             ELBO_prev = self.ELBO()
 
-            self.E_step()
-            self.M_step()
-
-            ELBO = self.ELBO()
-            diff_ELBO = np.abs(ELBO - ELBO_prev)
-            i += 1
-            
-            if verbose and i%5==0:
+            if verbose and (i%5==0 or i==1):  # Check on first and every 5 iter
                 print('----------')
                 print(i, ' iterations')
-                print('Current ELBO variation: ', diff_ELBO, '\n')
+                print('Current ELBO: ', ELBO_prev, '\n')
+                if i>0:
+                    print('Current ELBO variation: ', diff_ELBO, '\n')
                 print('Current Tau: ', self.tau, '\n')
                 print('Current Gamma: ', self.Gamma, '\n')
                 print('Current Pi: ', self.Pi, '\n')
                 print('----------')
 
+
+            self.E_step()
+            self.M_step()
+
+            ELBO = self.ELBO()
+            diff_ELBO = ELBO - ELBO_prev
+
+            i += 1
+
         self.n_iter = i
+
+        if verbose:
+            print('Total number of iterations: ', self.n_iter)
 
         return None
