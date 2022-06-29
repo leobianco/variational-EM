@@ -1,2 +1,0 @@
-* enregistrer et montrer au fur et à mesure l'ELBO et les parametres
-* critere d'arrete: difference de ELBO + maxiter.
