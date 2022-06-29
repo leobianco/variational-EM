@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.matlib
 import matplotlib.pyplot as plt
 import networkx as nx
 
@@ -29,3 +30,21 @@ def extract_upper_triang(A):
     """
 
     return np.triu(A) - np.diag(np.diag(A))
+
+
+def normalize_rows(A):
+    """Normalizes a matrix row-wise (no inbuilt method in numpy for this !).
+
+    Args:
+        A ((n, n) np.array): matrix to be normalized row-wise.
+
+    Returns:
+        norm_A ((n, n) np.array): row-wise normalized version of A.
+    """
+    
+    sA = np.sum(A, axis=1)  # sum along rows
+    k = A.shape[1]
+
+    norm_A = A / np.matlib.repmat(sA.T, k, 1).T
+    
+    return norm_A

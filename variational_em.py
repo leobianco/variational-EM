@@ -2,7 +2,7 @@ import numpy as np
 import numpy.matlib
 rng = np.random.default_rng()
 from scipy.optimize import minimize
-from utils import extract_upper_triang
+from utils import extract_upper_triang, normalize_rows
 
 
 class VariationalEM():
@@ -18,22 +18,39 @@ class VariationalEM():
         Pi_hat ((k,) np.array): estimated community priors.
     """
 
-    def __init__(self, A, k, tol=10**(-6)):
+    def __init__(self, A, k, tol_pf=10**(-6), tol_em=10**(-6)):
         # Attributes from model
         self.A = A
         self.k = k
         self.n = np.shape(self.A)[0]
         # Parameters to estimate, randomly initialized
-        self.tau = rng.uniform(size=(self.n, self.k))  # variational parameter
+        self.tau =\
+                np.array([rng.dirichlet(np.ones(self.k)) for i in range(self.n)])
         self.Gamma = np.zeros([self.k, self.k])  # connectivities parameter
         for i in range(self.k):
             self.Gamma[i,i] = rng.uniform() 
             for j in range(i+1, self.k):
                 self.Gamma[i,j] = rng.uniform()
                 self.Gamma[j,i] = self.Gamma[i,j]
-        self.Pi = rng.uniform(size=self.k)  # prior on communities parameter
-        # Others
-        self.tol = tol
+        self.Pi = rng.dirichlet(np.ones(self.k))  # prior on communities parameter
+        # Tolerances for convergence
+        self.tol_pf = tol_pf
+        self.tol_em = tol_pf
+        self.n_iter = 0
+
+    def ELBO(self):
+        """Calculates ELBO at current parameters."""
+
+        ELBO =\
+            np.sum(self.tau*np.log(self.tau))\
+                    + np.sum(np.dot(self.tau, np.log(self.Pi)))\
+                    + .5*(np.sum(np.dot(self.tau,np.dot(np.log(self.Gamma),
+                        self.tau.T))*self.A))\
+                    + .5*(np.sum(np.dot(self.tau, np.dot(np.log(1-self.Gamma),
+                        self.tau.T))*(1-np.eye(self.n)-self.A)))
+
+        return ELBO
+
 
     def E_step(self):
         """Updates tau via a fixed point relation."""
@@ -50,14 +67,16 @@ class VariationalEM():
             
             L = extract_upper_triang(self.A)
 
-            return np.exp(np.matlib.repmat(np.log(self.Pi), self.n, 1)\
+            unnorm = np.exp(np.matlib.repmat(np.log(self.Pi), self.n, 1)\
                     + L @ (tau @ np.log(self.Gamma))\
                     + (1-L) @ (tau @ np.log(1 - self.Gamma)))
+
+            return normalize_rows(unnorm)
 
         # Iterate it until convergence
         diff1 = 1
         diff2 = 1  # indicates oscillation
-        while diff1 > self.tol and diff2 > self.tol:
+        while diff1 > self.tol_pf and diff2 > self.tol_pf:
             tau_prev = self.tau
             self.tau = fixed_point(self, self.tau)
             diff1_prev = diff1
@@ -77,17 +96,37 @@ class VariationalEM():
         
         return None
 
-    def run(self, n_iter=10):
+    def run(self, max_iter=100, verbose=False):
         """Alternates E and M steps.
 
         Args:
-            n_iter (int): number of iterations.
+            max_iter (int): maximal number of iterations.
 
         TO DO: AJOUTER LE CRITERE D'ARRETE
         """
         
-        for i in range(n_iter):
+        diff_ELBO = 1
+        i = 0
+
+        while i < max_iter and diff_ELBO > self.tol_em:
+            ELBO_prev = self.ELBO()
+
             self.E_step()
             self.M_step()
-    
+
+            ELBO = self.ELBO()
+            diff_ELBO = np.abs(ELBO - ELBO_prev)
+            i += 1
+            
+            if verbose and i%5==0:
+                print('----------')
+                print(i, ' iterations')
+                print('Current ELBO variation: ', diff_ELBO, '\n')
+                print('Current Tau: ', self.tau, '\n')
+                print('Current Gamma: ', self.Gamma, '\n')
+                print('Current Pi: ', self.Pi, '\n')
+                print('----------')
+
+        self.n_iter = i
+
         return None
