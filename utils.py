@@ -48,3 +48,24 @@ def normalize_rows(A):
     norm_A = A / np.matlib.repmat(sA.T, k, 1).T
     
     return norm_A
+
+
+def print_info(i, ELBO_prev, diff_ELBO, tau, Gamma, Pi):
+    """Prints parameter information for the i-th iteration of EM. I
+    just coded this function so that the code in variational_em.py is cleaner.
+    
+    Args:
+        i (int): iteration index.
+        var_em_object (VariationalEM object): the algorithm object.
+    """
+
+    print('----------')
+    print('\n', i, ' iterations \n')
+    print('Current ELBO: ', ELBO_prev, '\n')
+    if i>0:
+        print('Current ELBO variation: ', diff_ELBO, '\n')
+    print('Current Tau: \n', tau, '\n')
+    print('Current Gamma: \n', Gamma, '\n')
+    print('Current Pi: \n', Pi, '\n') 
+    print('----------')
+

@@ -1,0 +1,5 @@
+* Calcule a accuracy no final.
+
+----
+* Uma vez terminado, escrever claramente no rapport tudo que fizemos nessa parte
+  numérica.
