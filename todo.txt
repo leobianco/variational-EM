@@ -1,5 +1,4 @@
 * Why does the ELBO decrease in some iterations ?
-* Store iteration informations in order to create graphs.
 * Write the README.md
 * Write in the report:
 	- Results obtained.

@@ -154,5 +154,8 @@ class VariationalEM():
         print('Total number of iterations: ', self.n_iter)
         if self.Z is not None:
             print('Accuracy: ', accuracy(self.tau, self.Z))
+        print('Estimated parameters: ')
+        print('Gamma = \n', self.Gamma)
+        print('Pi = \n', self.Pi)
 
         return None

@@ -20,7 +20,8 @@ parser.add_argument(
         '-vis', '--visual',
         help='Plots graph generated and relevant graphs', action='store_true')
 parser.add_argument(
-        '--maxiter', help='Maximal number of iterations for EM', default=500)
+        '--maxiter', help='Maximal number of iterations for EM',
+        default=500, type=float)
 parser.add_argument(
         '--tolELBO', help='Value of variation of ELBO to consider convergence',
         default=10**(-6))
