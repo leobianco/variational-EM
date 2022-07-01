@@ -95,7 +95,7 @@ class VariationalEM():
                         1).T)  # substracting the max is numerical trick
             result = normalize_rows(unnorm) 
 
-            # The following masks are numerical tricks to let tau far of border
+            # Numerical tricks to leave tau a bit far to the border
             first_mask = np.where(result < self.tol_mask, self.tol_mask, result)
             second_mask = np.where(first_mask > 1-self.tol_mask, 1-self.tol_mask, first_mask)
 
@@ -124,7 +124,7 @@ class VariationalEM():
         return None
 
 
-    def run(self, max_iter=100, verbose=False, tol_diff_ELBO=10**(-6), tol_mask=None):
+    def run(self, max_iter=100, verbose=False, tol_diff_ELBO=10**(-6)):
         """Alternates E and M steps.
 
         Args:
