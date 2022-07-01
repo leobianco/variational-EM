@@ -9,45 +9,39 @@ from utils import *
 class VariationalEM():
     """Object representing the variational EM algorithm for the SBM. Passing the
     optional argument Z initializes the variational parameters tau close to the
-    true solution, useful for testing purposes.
-    A note about initialization: first tau is initialized (randomly or close to
+    true solution, for testing purposes.
+    A note about initialization: first, tau is initialized (randomly or close to
     solution), then the model parameters are initialized by estimation from tau.
     This way, the starting parameters have more sense.
 
     Args:
         A ((n, n) np.array): adjacency matrix.
         k (int): number of communities.
-        Z ((n, k) np.array): communities matrix.
-
-    Returns:
-        Gamma_hat ((k, k) np.array): estimated connectivities.
-        Pi_hat ((k,) np.array): estimated community priors.
+        Z ((n, k) np.array): communities matrix (optional).
     """
 
     def __init__(self, A, k, Z=None):
         
-        # Attributes from model
+        # Attributes
+        self.Z = Z
         self.A = A
         self.k = k
         self.n = np.shape(self.A)[0]
         self.n_iter = 0
         self.tol_pf = 10**(-5)
-        self.tol_diff_ELBO = 10**(-6)
         self.tol_mask = 10**(-1)/self.n
 
         # Initialization of variational parameters
-        if Z is None:
-            self.Z = None
-            self.tau =\
-                    np.array([rng.dirichlet(np.ones(self.k)) for i in range(self.n)])
-        # passing Z means initialization close to solution
+        if self.Z is None:
+            self.tau = np.array(
+                    [rng.dirichlet(np.ones(self.k)) for i in range(self.n)])
         else:
-            self.Z = Z
             self.tau = np.where(self.Z==1, 0.95, 0.05)
 
-        # Initialization of model parameters
+        # Initialization of model parameters and of ELBO
         self.Gamma = self.estimate_Gamma()
         self.Pi = self.estimate_Pi()
+        self.curr_ELBO = self.ELBO()
 
 
     def estimate_Gamma(self):
@@ -130,7 +124,7 @@ class VariationalEM():
         return None
 
 
-    def run(self, max_iter=100, verbose=False, tol_diff_ELBO=None, tol_mask=None):
+    def run(self, max_iter=100, verbose=False, tol_diff_ELBO=10**(-6), tol_mask=None):
         """Alternates E and M steps.
 
         Args:
@@ -139,35 +133,26 @@ class VariationalEM():
         
         diff_ELBO = 1
         i = 0
-        # Code to allow user defined tolerances
-        if tol_diff_ELBO is None:
-            tol_diff_ELBO = self.tol_diff_ELBO
-        if not (tol_mask is None):
-            self.tol_mask = tol_mask
         
         while i < max_iter and np.abs(diff_ELBO) > tol_diff_ELBO:
-
-            ELBO_prev = self.ELBO()
-
-            if verbose and (i%5==0 or i==1):  # Check on first and every 5 iter
-                print_info(i, ELBO_prev, diff_ELBO, self.tau, self.Gamma,
-                        self.Pi)
+            if verbose and (i%5==0 or i==1):
+                print_info(
+                        i, self.curr_ELBO, diff_ELBO,
+                        self.tau, self.Gamma, self.Pi)
 
             self.M_step()
             self.E_step()
+            i += 1
 
             ELBO = self.ELBO()
-            diff_ELBO = ELBO - ELBO_prev
-
-            i += 1
+            diff_ELBO = ELBO - self.curr_ELBO
+            self.curr_ELBO = ELBO
 
         self.n_iter = i
 
-        if verbose:
-            # Print information of last iteration too.
-            print_info(self.n_iter, ELBO_prev, diff_ELBO, self.tau, self.Gamma, self.Pi)
-            print('Total number of iterations: ', self.n_iter)
-            if not self.Z is None:
-                print('Accuracy: ', accuracy(self.tau, self.Z))
+        # Last iteration information
+        print('Total number of iterations: ', self.n_iter)
+        if self.Z is not None:
+            print('Accuracy: ', accuracy(self.tau, self.Z))
 
         return None

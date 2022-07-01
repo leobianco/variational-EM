@@ -1,30 +1,65 @@
 import numpy as np
+import argparse
 from sbm import SBM
 from variational_em import VariationalEM
 from utils import *
 
-if __name__=="__main__":
 
-    load_query = input('Load graph ? (y/n) ')
+parser = argparse.ArgumentParser()
+parser.add_argument(
+        '-n', help='Number of points',
+        type=int, default=100
+        )
+parser.add_argument(
+        '-l', '--load',
+        help='Loads saved graph', type=str)
+parser.add_argument(
+        '-v', '--verbose',
+        help='Shows information on iterations', action='store_true')
+parser.add_argument(
+        '-vis', '--visual',
+        help='Plots graph generated and relevant graphs', action='store_true')
+parser.add_argument(
+        '--maxiter', help='Maximal number of iterations for EM', default=500)
+parser.add_argument(
+        '--tolELBO', help='Value of variation of ELBO to consider convergence',
+        default=10**(-6))
+args = parser.parse_args()
 
-    if load_query=='n':
+
+def main():
+    # Model creation and graph sampling
+    if args.load is None:
+        # Generate a random graph
         Gamma = np.array([
                 [0.8, 0.05],
                 [0.05, 0.8]
                 ])
         Pi = np.array([0.45, 0.55])
-        
-        model = SBM(100, Gamma, Pi)
+        model = SBM(args.n, Gamma, Pi)
         Z, Z_v, A = model.sample()
-    elif load_query=='y':
-        file_name = input('Enter name of graph: ') or 'graph'
-        Gamma, Pi, Z, Z_v, A = load_graph(file_name)
+    else:
+        # Alternatively, load a saved graph
+        Gamma, Pi, Z, Z_v, A = load_graph(args.load)
 
-    draw_graph(Z_v, A)
+    # Visualize the graph
+    if args.visual:
+        draw_graph(Z_v, A)
 
+    # Variational EM algorithm
     var_em = VariationalEM(A, 2, Z)
-    var_em.run(max_iter=500, verbose=True, tol_diff_ELBO=10**(-10))
-    save_query = input('Save ? (y/n) ') or 'n'
-    if save_query=='y':
-        file_name = input('Name of this save: ') or 'graph'
-        save_graph(file_name, Gamma, Pi, Z, Z_v, A)
+    var_em.run(
+            max_iter=args.maxiter,
+            tol_diff_ELBO=args.tolELBO,
+            verbose=args.verbose)
+
+    # Saving results
+    if args.load is None:
+        save_query = input('Save ? (y/n) ') or 'n'
+        if save_query=='y':
+            file_name = input('Name of this save: ') or 'graph'
+            save_graph(file_name, Gamma, Pi, Z, Z_v, A)
+
+
+if __name__=="__main__":
+    main()

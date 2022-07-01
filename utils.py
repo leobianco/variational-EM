@@ -65,7 +65,7 @@ def print_info(i, ELBO_prev, diff_ELBO, tau, Gamma, Pi):
     print('Current ELBO: ', ELBO_prev, '\n')
     if i>0:
         print('Current ELBO variation: ', diff_ELBO, '\n')
-    print('Current Tau: \n', tau, '\n')
+    print('Current Tau: \n', tau[:4,:], '\n ... \n', tau[-5:,:], '\n')
     print('Current Gamma: \n', Gamma, '\n')
     print('Current Pi: \n', Pi, '\n') 
     print('----------')
