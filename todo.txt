@@ -1,5 +1,10 @@
-* Calcule a accuracy no final.
-
-----
-* Uma vez terminado, escrever claramente no rapport tudo que fizemos nessa parte
-  numérica.
+* Write the README.md
+* Write in the report:
+	- Results obtained.
+	- Numerical tricks used, matricial form of the equations.
+	- Cases where it fails, instabilities.
+	- Compare with spectral clustering.
+* Change to argparse:
+	- The save/load system.
+	- Algorithm parameters: max_iter, verbose
+* Adapt code and test with a larger number of communities.

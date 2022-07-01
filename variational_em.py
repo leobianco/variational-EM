@@ -3,7 +3,7 @@ import numpy.matlib
 rng = np.random.default_rng()
 np.set_printoptions(precision=2)  # for clarity
 from scipy.optimize import minimize
-from utils import extract_upper_triang, normalize_rows, print_info
+from utils import *
 
 
 class VariationalEM():
@@ -41,7 +41,8 @@ class VariationalEM():
                     np.array([rng.dirichlet(np.ones(self.k)) for i in range(self.n)])
         # passing Z means initialization close to solution
         else:
-            self.tau = np.where(Z==1, 0.95, 0.05)
+            self.Z = Z
+            self.tau = np.where(self.Z==1, 0.95, 0.05)
 
         # Initialization of model parameters
         self.Gamma = self.estimate_Gamma()
@@ -166,5 +167,7 @@ class VariationalEM():
             # Print information of last iteration too.
             print_info(self.n_iter, ELBO_prev, diff_ELBO, self.tau, self.Gamma, self.Pi)
             print('Total number of iterations: ', self.n_iter)
+            if not self.Z is None:
+                print('Accuracy: ', accuracy(self.tau, self.Z))
 
         return None
