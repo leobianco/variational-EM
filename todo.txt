@@ -1,10 +1,10 @@
+* Why does the ELBO decrease in some iterations ?
+* Change to argparse:
+	- The save/load system.
+	- Algorithm parameters: max_iter, verbose
 * Write the README.md
 * Write in the report:
 	- Results obtained.
 	- Numerical tricks used, matricial form of the equations.
 	- Cases where it fails, instabilities.
 	- Compare with spectral clustering.
-* Change to argparse:
-	- The save/load system.
-	- Algorithm parameters: max_iter, verbose
-* Adapt code and test with a larger number of communities.

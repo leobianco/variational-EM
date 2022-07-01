@@ -17,14 +17,14 @@ if __name__=="__main__":
         model = SBM(100, Gamma, Pi)
         Z, Z_v, A = model.sample()
     elif load_query=='y':
-        file_name = input('Enter name of graph: ')
+        file_name = input('Enter name of graph: ') or 'graph'
         Gamma, Pi, Z, Z_v, A = load_graph(file_name)
 
     draw_graph(Z_v, A)
 
     var_em = VariationalEM(A, 2, Z)
     var_em.run(max_iter=500, verbose=True, tol_diff_ELBO=10**(-10))
-    save_query = input('Save ? (y/n) ')
+    save_query = input('Save ? (y/n) ') or 'n'
     if save_query=='y':
         file_name = input('Name of this save: ') or 'graph'
         save_graph(file_name, Gamma, Pi, Z, Z_v, A)

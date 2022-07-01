@@ -37,6 +37,7 @@ class VariationalEM():
 
         # Initialization of variational parameters
         if Z is None:
+            self.Z = None
             self.tau =\
                     np.array([rng.dirichlet(np.ones(self.k)) for i in range(self.n)])
         # passing Z means initialization close to solution
@@ -60,7 +61,6 @@ class VariationalEM():
         """Estimates Pi using current tau."""
 
         return np.mean(self.tau, axis=0)
-
 
 
     def ELBO(self):
