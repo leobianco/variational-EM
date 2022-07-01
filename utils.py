@@ -5,19 +5,28 @@ import networkx as nx
 import itertools
 
 
-def draw_graph(communities, A):
+def draw_graph(communities, tau, A):
     """Wrapper for networkx drawing capabilities.
     
     Args:
+        Z_v (n np.array): vector with true community labels.
+        tau ((n, k) np.array): matrix of variational parameters.
         A ((n, n) np.array): adjacency matrix of the graph to be shown.
 
     Returns:
         None (pyplot window with graph)
     """
 
+    n = A.shape[0]
     G = nx.from_numpy_matrix(A)
-    nx.draw(G, node_color=communities)
-    plt.show()
+    pos = nx.spring_layout(G)
+    Z_v_hat = np.argmax(MAP(tau), axis=1)
+    nx.draw(G, pos=pos, node_color=communities, with_labels=False)
+    labels={}
+    for i in range(n):
+        labels[i]=f'${communities[i]}$|{Z_v_hat[i]}'
+    nx.draw_networkx_labels(G, pos=pos, labels=labels, font_color='r')
+    plt.show();
 
 
 def extract_upper_triang(A):

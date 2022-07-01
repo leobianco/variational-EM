@@ -1,8 +1,4 @@
 * Why does the ELBO decrease in some iterations ?
-* Change to argparse:
-	- The save/load system.
-	- Algorithm parameters: max_iter, verbose
-* Change to dictionaries to get rid of ugly unpackings.
 * Store iteration informations in order to create graphs.
 * Write the README.md
 * Write in the report:

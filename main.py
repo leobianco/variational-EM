@@ -42,16 +42,16 @@ def main():
         # Alternatively, load a saved graph
         Gamma, Pi, Z, Z_v, A = load_graph(args.load)
 
-    # Visualize the graph
-    if args.visual:
-        draw_graph(Z_v, A)
-
     # Variational EM algorithm
     var_em = VariationalEM(A, 2, Z)
     var_em.run(
             max_iter=args.maxiter,
             tol_diff_ELBO=args.tolELBO,
             verbose=args.verbose)
+    
+    # Visualize the graph
+    if args.visual:
+        draw_graph(Z_v, var_em.tau, A)
 
     # Saving results
     if args.load is None:
