@@ -17,22 +17,25 @@ class VariationalEM():
     Args:
         A ((n, n) np.array): adjacency matrix.
         k (int): number of communities.
-        Z ((n, k) np.array): communities matrix (optional).
+        Z ((n, k) np.array): communities matrix.
+        
     """
 
-    def __init__(self, A, k, Z=None):
+    def __init__(self, A, k, Z=None, sol=False):
         
         # Attributes
-        self.Z = Z
         self.A = A
         self.k = k
+        self.Z = Z
+        self.sol = sol
         self.n = np.shape(self.A)[0]
         self.n_iter = 0
         self.tol_pf = 10**(-5)
         self.tol_mask = 10**(-1)/self.n
+        self.permutation = None
 
         # Initialization of variational parameters
-        if self.Z is None:
+        if self.sol is False:
             self.tau = np.array(
                     [rng.dirichlet(np.ones(self.k)) for i in range(self.n)])
         else:
@@ -154,8 +157,9 @@ class VariationalEM():
 
         # Last iteration information
         print('Total number of iterations: ', self.n_iter)
-        if self.Z is not None:
-            print('Accuracy: ', accuracy(self.tau, self.Z))
+        accuracy_value, accuracy_permutation = accuracy(self.tau, self.Z)
+        self.permutation = accuracy_permutation
+        print('Accuracy: ', accuracy_value)
         print('Estimated parameters: ')
         print('Gamma = \n', self.Gamma)
         print('Pi = \n', self.Pi)

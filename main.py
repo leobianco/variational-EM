@@ -47,7 +47,7 @@ def main():
         Gamma, Pi, Z, Z_v, A = load_graph(args.load)
 
     # Variational EM algorithm
-    var_em = VariationalEM(A, 2, Z) if args.sol else VariationalEM(A, 2)
+    var_em = VariationalEM(A, 2, Z, args.sol)
     var_em.run(
             max_iter=args.maxiter,
             tol_diff_ELBO=args.tolELBO,
@@ -55,7 +55,7 @@ def main():
     
     # Visualize the graph
     if args.visual:
-        draw_graph(Z_v, var_em.tau, A)
+        draw_graph(Z_v, var_em.tau, A, var_em.permutation)
 
     # Saving results
     if args.load is None:

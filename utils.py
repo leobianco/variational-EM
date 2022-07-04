@@ -5,13 +5,14 @@ import networkx as nx
 import itertools
 
 
-def draw_graph(communities, tau, A):
+def draw_graph(communities, tau, A, permutation):
     """Wrapper for networkx drawing capabilities.
     
     Args:
         Z_v (n np.array): vector with true community labels.
         tau ((n, k) np.array): matrix of variational parameters.
         A ((n, n) np.array): adjacency matrix of the graph to be shown.
+        permutation ((k,) np.array): permutation of labels maximizing accuracy.
 
     Returns:
         None (pyplot window with graph)
@@ -20,7 +21,7 @@ def draw_graph(communities, tau, A):
     n = A.shape[0]
     G = nx.from_numpy_matrix(A)
     pos = nx.spring_layout(G)
-    Z_v_hat = np.argmax(MAP(tau), axis=1)
+    Z_v_hat = np.argmax(MAP(tau[:, permutation]), axis=1)
     nx.draw(G, pos=pos, node_color=communities, with_labels=False)
     labels={}
     for i in range(n):
@@ -106,20 +107,24 @@ def accuracy(tau, Z):
 
     Returns:
         accuracy (float): maximal percentage of correct class predictions.
+        saved_permutation (k np.array): ``correct'' permutation of tau for
+        labels.
     """
 
     n, k = Z.shape
     accuracy = 0
     # Permute columns of tau
     all_permutations = list(itertools.permutations(list(range(k))))
+    saved_permutation = None
     for permutation in all_permutations:
         tau_permuted = tau[:, permutation]
         Z_hat = MAP(tau_permuted)
         curr_accuracy = np.mean(np.all(Z_hat==Z, axis=1))
         if curr_accuracy > accuracy:
             accuracy = curr_accuracy
+            saved_permutation = permutation
 
-    return accuracy
+    return accuracy, saved_permutation
 
 def save_graph(file_name, Gamma, Pi, Z, Z_v, A):
     """Saves graphs where I obtained good results."""

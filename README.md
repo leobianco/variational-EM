@@ -22,7 +22,7 @@ Run the ```main.py``` script along with the desired flags:
 
 ```-v``` or ```--verbose```: runs algorithm in verbose mode, showing info on tau, the parameters, and the ELBO each five iterations,
 
-```-vis``` or ```--visual```: shows the graph generated, along with ground truth (GT) community labels and estimated (E) community labels, in the format GT | E on each node,
+```-vis``` or ```--visual```: shows the graph generated, along with ground truth (GT) community labels and estimated (E) community labels, in the format GT | E on each node.
 
 ```-s``` or ```--sol```: initializes $\tau$ "close to the solution", i.e., $\tau_0 = Z + \varepsilon$, mostly for debugging purposes,
 
