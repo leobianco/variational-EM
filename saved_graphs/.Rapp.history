@@ -1,0 +1,51 @@
+library(blockmodels)
+library(blockmodels)
+library(blockmodels)
+library(reticulate)
+install.packages('reticulate')
+library(reticulate)
+np <- import('numpy')
+y
+ls
+dir()
+dir()
+mat <- np$load('github.npy')
+mat
+mat
+mat
+mat
+mat <- np$load('github.npy')
+mat
+mat <- np$load('github.npy')
+mat
+mat <- np$load('github.npz')
+mat$files
+mat$f[['name5']]
+A <- mat$f[['name5']]
+my_model <- BM_bernoulli('SBM', A)
+my_model$estimate
+my_model$estimate()
+my_model$
+ICL
+my_model
+my_model$model_parameters
+my_model$plot_obs_pred(2)
+my_model$plot_parameters(2)
+my_model$memberships
+my_model$memberships[[2]]
+my_model$memberships[[2]]$Z
+Z_pred <- my_model$memberships[[2]]$Z
+Z <- mat$f[['name3']]
+Z
+Z - Z_pred
+mean(Z - Z_pred)
+Z - Z_pred
+mat <- np$load('blockmodels.npz')
+A <- mat$f[['name5']]
+Z <- mat$f[['name3']]
+my_model <- BM_bernoulli('SBM', A)
+my_model$estimate()
+Z_pred <- my_model$memberships[[2]]$Z
+Z - Z_pred
+mean(Z - Z_pred)
+my_model$model_parameters
