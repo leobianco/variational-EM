@@ -8,7 +8,7 @@ This repository contains part of the code I developed during my M2 internship. I
 
 ------
 
-Parameters $\Gamma$ and $\pi$ can be modified inside ```main.py```, default values are
+The connectivity parameter $\Gamma$ and the community priors $\pi$ can be modified inside ```main.py```. Default values are
 
 $\Gamma=((0.8, 0.05), (0.05, 0.8))$ and $\pi = (0.45, 0.55)$. Run the ```main.py``` script along with the desired flags:
 
@@ -22,7 +22,7 @@ $\Gamma=((0.8, 0.05), (0.05, 0.8))$ and $\pi = (0.45, 0.55)$. Run the ```main.py
 
 ```-vis``` or ```--visual```: shows the graph generated, along with ground truth (GT) community labels and estimated (E) community labels, in the format GT | E on each node.
 
-```-s``` or ```--sol```: initializes $\tau$ "close to the solution", i.e., $\tau_0 = Z + \varepsilon$, mostly for debugging purposes,
+```-s``` or ```--sol```: initializes $\tau$ close to the solution, i.e., $\tau = Z + \varepsilon$, mostly for debugging purposes,
 
 ```--maxiter```: number of maximal iterations allowed,
 
