@@ -159,7 +159,7 @@ class VariationalEM():
         print('Total number of iterations: ', self.n_iter)
         accuracy_value, accuracy_permutation = accuracy(self.tau, self.Z)
         self.permutation = accuracy_permutation
-        print('Accuracy: ', accuracy_value)
+        print(f'Accuracy of community estimation: {accuracy_value:.3f}')
         print('Estimated parameters: ')
         print('Gamma = \n', self.Gamma)
         print('Pi = \n', self.Pi)

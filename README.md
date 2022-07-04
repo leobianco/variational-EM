@@ -6,7 +6,9 @@ This repository contains part of the code I developed during my M2 internship. I
 
 **tl;dr** run ```python3 main.py -n 300 -vis -v``` in your terminal to generate a graph with 300 nodes and to run the algorithm on it, and visualize the results.
 
-![Figure_1](./example.png)
+![Figure_1](./example_graph.png)
+
+<img src="./example_verbose.png" alt="Figure_2" style="zoom:50%;" />
 
 ------
 
