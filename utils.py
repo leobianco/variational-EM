@@ -27,7 +27,7 @@ def draw_graph(communities, tau, A, permutation):
     for i in range(n):
         labels[i]=f'${communities[i]}$|{Z_v_hat[i]}'
     nx.draw_networkx_labels(G, pos=pos, labels=labels, font_color='r')
-    plt.show();
+    plt.show(block=False);
 
 
 def extract_upper_triang(A):

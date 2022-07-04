@@ -4,15 +4,13 @@ This repository contains part of the code I developed during my M2 internship. I
 
 ## How to use it
 
-**tl;dr** run ```python3 main.py -n 500 -vis -v``` in your terminal to generate a graph with 500 nodes and to run the algorithm on it.
+**tl;dr** run ```python3 main.py -n 300 -vis -v``` in your terminal to generate a graph with 300 nodes and to run the algorithm on it, and visualize the results.
 
 ------
 
 Parameters $\Gamma$ and $\pi$ can be modified inside ```main.py```, default values are
-$$
-\Gamma = \begin{pmatrix}0.8 & 0.05 \\ 0.05 & 0.8 \end{pmatrix} \quad \text{and} \quad \pi = (0.45, 0.55).
-$$
-Run the ```main.py``` script along with the desired flags:
+
+$\Gamma=((0.8, 0.05), (0.05, 0.8))$ and $\pi = (0.45, 0.55)$. Run the ```main.py``` script along with the desired flags:
 
 ```-h```: shows help on terminal,
 
@@ -30,5 +28,11 @@ Run the ```main.py``` script along with the desired flags:
 
 ```--tolELBO```: if the ELBO varies less than this value, then it is considered the algorithm has converged (or not and it is stuck alternating points).
 
+If you have not loaded a saved graph, at the end of the execution there will be a prompt ```Save ? (y/n)``` allowing you to save a result. To ignore it, type ```n``` or simply press ```Enter```.
+
 ## References
+
+[1] Mariadassou, M., Robin, S. and Vacher, C. (2010). Uncovering latent structure in valued graphs: A variational approach. *The Annals of Applied Statistics* **4** 715–42.
+
+
 

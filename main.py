@@ -59,7 +59,7 @@ def main():
 
     # Saving results
     if args.load is None:
-        save_query = input('Save ? (y/n) ') or 'n'
+        save_query = input('\n Save ? (y/n) \n') or 'n'
         if save_query=='y':
             file_name = input('Name of this save: ') or 'graph'
             save_graph(file_name, Gamma, Pi, Z, Z_v, A)
