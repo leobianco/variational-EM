@@ -24,7 +24,7 @@ $\Gamma=((0.8, 0.05), (0.05, 0.8))$ and $\pi = (0.45, 0.55)$. Run the ```main.py
 
 ```-v``` or ```--verbose```: runs algorithm in verbose mode, showing info on tau, the parameters, and the ELBO each five iterations,
 
-```-vis``` or ```--visual```: shows the graph generated, along with ground truth (GT) community labels and estimated (E) community labels, in the format GT | E on each node.
+```-vis``` or ```--visual```: shows the graph generated, along with ground truth (GT) community labels and estimated (E) community labels, in the format E | GT on each node.
 
 ```-s``` or ```--sol```: initializes the variational parameter close to the GT assignments, i.e., $\tau = Z + \varepsilon$, mostly for debugging purposes,
 

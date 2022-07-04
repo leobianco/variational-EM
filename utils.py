@@ -25,9 +25,9 @@ def draw_graph(communities, tau, A, permutation):
     nx.draw(G, pos=pos, node_color=communities, with_labels=False)
     labels={}
     for i in range(n):
-        labels[i]=f'${communities[i]}$|{Z_v_hat[i]}'
+        labels[i]=f'${Z_v_hat[i]}|{communities[i]}$'
     nx.draw_networkx_labels(G, pos=pos, labels=labels, font_color='r')
-    plt.show(block=False);
+    plt.show();
 
 
 def extract_upper_triang(A):
@@ -129,12 +129,9 @@ def accuracy(tau, Z):
 def save_graph(file_name, Gamma, Pi, Z, Z_v, A):
     """Saves graphs where I obtained good results."""
 
-    with open('saved_graphs/'+file_name+'.npy', 'wb') as f:
-        np.save(f, Gamma)
-        np.save(f, Pi)
-        np.save(f, Z)
-        np.save(f, Z_v)
-        np.save(f, A) 
+    with open('saved_graphs/'+file_name+'.npz', 'wb') as f:
+        np.savez(f, name1=Gamma, name2=Pi, name3=Z, name4=Z_v, name5=A)
+
 
 def load_graph(file_name):
     """Loads saved graphs
@@ -146,11 +143,8 @@ def load_graph(file_name):
         Parameters and sample information.
     """
 
-    with open('saved_graphs/'+file_name+'.npy', 'rb') as f:
-        Gamma = np.load(f)
-        Pi = np.load(f)
-        Z = np.load(f)
-        Z_v = np.load(f)
-        A = np.load(f)
+    with open('saved_graphs/'+file_name+'.npz', 'rb') as f:
+        container = np.load(f)
+        Gamma, Pi, Z, Z_v, A = [container[key] for key in container]
 
     return Gamma, Pi, Z, Z_v, A

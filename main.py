@@ -45,6 +45,8 @@ def main():
     else:
         # Alternatively, load a saved graph
         Gamma, Pi, Z, Z_v, A = load_graph(args.load)
+        print(Z_v)
+        print(A)
 
     # Variational EM algorithm
     var_em = VariationalEM(A, 2, Z, args.sol)
