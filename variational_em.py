@@ -36,7 +36,8 @@ class VariationalEM():
             self.tau = np.array(
                     [rng.dirichlet(np.ones(self.k)) for i in range(self.n)])
         else:
-            self.tau = np.where(self.Z==1, 0.95, 0.05)
+            self.tau = np.where(self.Z==1, 0.95, 0.05) + rng.uniform(high=0.05,
+                    size=(self.n, self.k))
 
         # Initialization of model parameters and of ELBO
         self.Gamma = self.estimate_Gamma()
@@ -61,13 +62,13 @@ class VariationalEM():
         """Calculates ELBO at current parameters."""
 
         ELBO =\
-            -np.sum(self.tau*np.log(self.tau))\
-                    + np.sum(np.dot(self.tau, np.log(self.Pi)))\
-                    + .5*(np.sum(self.tau*(np.dot(np.dot(self.A,
-                        self.tau),np.log(self.Gamma)))))\
-                    + .5*(np.sum(self.tau*(np.dot(np.dot(
-                        (1-np.eye(self.n)-self.A), self.tau),
-                        np.log(1-self.Gamma)))))
+                -np.sum(self.tau*np.log(self.tau))\
+                + np.sum(np.dot(self.tau, np.log(self.Pi)))\
+                + .5*(np.sum(self.tau*(np.dot(np.dot(self.A,
+                    self.tau),np.log(self.Gamma)))))\
+                + .5*(np.sum(self.tau*(np.dot(np.dot(
+                    (1-np.eye(self.n)-self.A), self.tau),
+                    np.log(1-self.Gamma)))))
 
         return ELBO
 
@@ -87,7 +88,8 @@ class VariationalEM():
             
             L = extract_upper_triang(self.A)
             L_compl = extract_upper_triang(1 - self.A)
-            lik = np.matlib.repmat(np.log(self.Pi), self.n, 1)\
+            lik =\
+                    np.matlib.repmat(np.log(self.Pi), self.n, 1)\
                     + L @ (tau @ np.log(self.Gamma))\
                     + L_compl @ (tau @ np.log(1 - self.Gamma))
             unnorm =\
@@ -110,7 +112,7 @@ class VariationalEM():
             self.tau = fixed_point(self, self.tau)
             diff1_prev = diff1
             diff1 = np.max(np.abs(self.tau - tau_prev))
-            diff2 = np.max(np.abs(diff1_prev - diff1))
+            diff2 = np.max(np.abs(diff1_prev + diff1))  # yes, it is a + here
 
         return None
 

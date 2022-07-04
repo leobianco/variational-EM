@@ -20,6 +20,9 @@ parser.add_argument(
         '-vis', '--visual',
         help='Plots graph generated and relevant graphs', action='store_true')
 parser.add_argument(
+        '-s', '--sol',
+        help='Initializes tau close to Z', action='store_true')
+parser.add_argument(
         '--maxiter', help='Maximal number of iterations for EM',
         default=500, type=float)
 parser.add_argument(
@@ -44,7 +47,7 @@ def main():
         Gamma, Pi, Z, Z_v, A = load_graph(args.load)
 
     # Variational EM algorithm
-    var_em = VariationalEM(A, 2, Z)
+    var_em = VariationalEM(A, 2, Z) if args.sol else VariationalEM(A, 2)
     var_em.run(
             max_iter=args.maxiter,
             tol_diff_ELBO=args.tolELBO,
