@@ -1,7 +1,0 @@
-* Why does the ELBO decrease in some iterations ?
-* Write the README.md
-* Write in the report:
-	- Results obtained.
-	- Numerical tricks used, matricial form of the equations.
-	- Cases where it fails, instabilities.
-	- Compare with spectral clustering.
